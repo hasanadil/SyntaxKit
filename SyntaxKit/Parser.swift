@@ -45,7 +45,7 @@ public class Parser {
 			var range = paragraphRange
 
 			// Loop through the line until we reach the end
-			while range.length > 0 && range.location < limit {
+            while range.length > 0 && range.location < limit {
 				let location = parse(string, inRange: range, callback: callback)
 				range.location = Int(location)
 				range.length = max(0, range.length - paragraphRange.location - range.location)
@@ -74,8 +74,11 @@ public class Parser {
 					beginRange = beginResults.range else { continue }
 
 				let location = NSMaxRange(beginRange)
-				let endBounds = NSMakeRange(location, bounds.length - location - bounds.location)
-
+                
+                //let endBounds = NSMakeRange(location, bounds.length - location - bounds.location)
+                let length = bounds.length - location - bounds.location
+                let endBounds = NSMakeRange(location, (length < 0) ? 0 : length)
+                
 				guard let endResults = parse(string, inRange: endBounds, expression: end, captures: pattern.endCaptures),
 					endRange = endResults.range else { /* TODO: Rewind? */ continue }
 
